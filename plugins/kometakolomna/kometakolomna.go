@@ -97,7 +97,7 @@ func (p *plugin) listHandler(doc *goquery.Document, contentType string) ([]*feed
 			return
 		}
 
-		docUrl, err := url.JoinPath("https://kometakolomna.ru/docs/31", path)
+		docUrl, err := url.JoinPath("https://kometakolomna.ru", path)
 		if err != nil {
 			return
 		}
