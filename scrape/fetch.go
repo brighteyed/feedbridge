@@ -9,8 +9,9 @@ import (
 
 // TaskDocumentResponse is the result of a fetched task and it's originating URL
 type TaskDocumentResponse struct {
-	Document goquery.Document
-	URL      string
+	Document    goquery.Document
+	URL         string
+	ContentType string
 }
 
 // Task is a scrape task
@@ -52,8 +53,9 @@ func URLToDocument(c *http.Client, tasks []Task) ([]TaskDocumentResponse, error)
 		resp.Body.Close()
 
 		rt := TaskDocumentResponse{
-			Document: *doc,
-			URL:      task.URL,
+			Document:    *doc,
+			URL:         task.URL,
+			ContentType: resp.Header.Get("Content-Type"),
 		}
 		result = append(result, rt)
 	}

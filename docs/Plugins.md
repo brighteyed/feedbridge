@@ -24,7 +24,7 @@ To install a plugin it has to be added to the global plugin repository, once thi
 plugin will run periodically as defined by the interval that is set for the instance.
 
 ```
-pluginRepo.Install(scmp.NewPlugin(l, c))
+pluginRepo.Install(kometakolomna.NewPlugin(l, c))
 ```
 
 # Open a Pull Request
