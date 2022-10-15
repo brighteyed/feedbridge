@@ -16,4 +16,5 @@ require (
 	github.com/patrickmn/go-cache v2.1.0+incompatible
 	github.com/peterbourgon/diskv v2.0.1+incompatible
 	github.com/prometheus/client_golang v1.3.0
+	golang.org/x/net v0.0.0-20200202094626-16171245cfb2
 )

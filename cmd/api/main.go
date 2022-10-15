@@ -17,9 +17,9 @@ import (
 	"github.com/dewey/feedbridge/api"
 	"github.com/dewey/feedbridge/config"
 	"github.com/dewey/feedbridge/plugin"
+	"github.com/dewey/feedbridge/plugins/kometakolomna"
 	"github.com/dewey/feedbridge/plugins/racefansnet"
 	"github.com/dewey/feedbridge/plugins/roadsandkingdoms"
-	"github.com/dewey/feedbridge/plugins/scmp"
 	"github.com/dewey/feedbridge/runner"
 
 	"github.com/dewey/feedbridge/store"
@@ -56,7 +56,7 @@ func main() {
 	}
 
 	pluginRepo := plugin.NewMemRepo()
-	pluginRepo.Install(scmp.NewPlugin(l, c))
+	pluginRepo.Install(kometakolomna.NewPlugin(l, c))
 	pluginRepo.Install(roadsandkingdoms.NewPlugin(l, c))
 	pluginRepo.Install(racefansnet.NewPlugin(l, c))
 
