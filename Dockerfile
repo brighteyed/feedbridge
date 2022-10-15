@@ -1,24 +1,17 @@
-FROM golang:1.12-alpine as builder
-
-RUN apk add git bash
+FROM golang:1.19-alpine as builder
 
 ENV GO111MODULE=on
 
 # Add our code
-ADD ./ $GOPATH/src/github.com/dewey/feedbridge
+ADD ./ /app
 
 # build
-WORKDIR $GOPATH/src/github.com/dewey/feedbridge
-RUN go get -u github.com/gobuffalo/packr/... && \ 
-    cd $GOPATH/src/github.com/dewey/feedbridge && \   
-    packr && \ 
-    GO111MODULE=on GOGC=off go build -mod=vendor -v -o /feedbridge ./cmd/api/
+WORKDIR /app
+RUN go build -v -o /feedbridge ./cmd/api/
 
-# multistage
 FROM alpine:latest
 
-# https://stackoverflow.com/questions/33353532/does-alpine-linux-handle-certs-differently-than-busybox#33353762
-RUN apk --update upgrade && \
+RUN apk update && \
     apk add curl ca-certificates && \
     update-ca-certificates && \
     rm -rf /var/cache/apk/*
@@ -26,10 +19,9 @@ RUN apk --update upgrade && \
 COPY --from=builder /feedbridge /usr/bin/feedbridge
 
 # Run the image as a non-root user
-RUN adduser -D mfs
+RUN adduser -D feedbridge
 RUN chmod 0755 /usr/bin/feedbridge
 
-USER mfs
+USER feedbridge
 
-# Run the app. CMD is required to run on Heroku
 CMD feedbridge 
