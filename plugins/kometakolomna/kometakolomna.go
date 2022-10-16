@@ -31,7 +31,7 @@ func NewPlugin(l log.Logger, c *http.Client) *plugin {
 		c: c,
 		f: &feeds.Feed{
 			Title:       "СШОР Комета: протоколы соревнований",
-			Link:        &feeds.Link{Href: "https://kometakolomna.ru/docs/31"},
+			Link:        &feeds.Link{Href: "https://kometakolomna.ru/docs/31/"},
 			Description: "СШОР по конькобежному спорту Комета. Протоколы соревнований",
 		},
 	}
@@ -44,12 +44,12 @@ func (p *plugin) Info() pm.PluginMetadata {
 		Description:   `СШОР по конькобежному спорту Комета. Протоколы соревнований`,
 		Author:        "brighteyed",
 		AuthorURL:     "https://github.com/brighteyed",
-		SourceURL:     "https://kometakolomna.ru/docs/31",
+		SourceURL:     "https://kometakolomna.ru/docs/31/",
 	}
 }
 
 func (p *plugin) Run() (*feeds.Feed, error) {
-	const docsUrl = "https://kometakolomna.ru/docs/31"
+	const docsUrl = "https://kometakolomna.ru/docs/31/"
 
 	result, err := scrape.URLToDocument(p.c, scrape.URLtoTask([]string{docsUrl}))
 	if err != nil {
@@ -103,7 +103,7 @@ func (p *plugin) listHandler(doc *goquery.Document, contentType string) ([]*feed
 		}
 
 		item.Description = fmt.Sprintf(`<a href="%s">Скачать протоколы</a>`, docUrl)
-		item.Link = &feeds.Link{Href: "https://kometakolomna.ru/docs/31"}
+		item.Link = &feeds.Link{Href: "https://kometakolomna.ru/docs/31/"}
 		item.Id = path
 
 		feedItems = append(feedItems, item)
