@@ -30,9 +30,9 @@ func NewPlugin(l log.Logger, c *http.Client) *plugin {
 		l: log.With(l, "plugin", "kometakolomna"),
 		c: c,
 		f: &feeds.Feed{
-			Title:       "СШОР Комета: протоколы соревнований",
-			Link:        &feeds.Link{Href: "https://kometakolomna.ru/docs/31/"},
-			Description: "СШОР по конькобежному спорту Комета. Протоколы соревнований",
+			Title:       "СШОР Комета: документы",
+			Link:        &feeds.Link{Href: "https://kometakolomna.ru/docs/"},
+			Description: "СШОР по конькобежному спорту Комета. Протоколы соревнований и присвоение спортивных разрядов",
 		},
 	}
 }
@@ -40,18 +40,21 @@ func NewPlugin(l log.Logger, c *http.Client) *plugin {
 func (p *plugin) Info() pm.PluginMetadata {
 	return pm.PluginMetadata{
 		TechnicalName: "kometakolomna",
-		Name:          "СШОР Комета. Протоколы соревнований",
-		Description:   `СШОР по конькобежному спорту Комета. Протоколы соревнований`,
+		Name:          "СШОР Комета: документы",
+		Description:   "СШОР по конькобежному спорту Комета. Протоколы соревнований и присвоение спортивных разрядов",
 		Author:        "brighteyed",
 		AuthorURL:     "https://github.com/brighteyed",
-		SourceURL:     "https://kometakolomna.ru/docs/31/",
+		SourceURL:     "https://kometakolomna.ru/docs/",
 	}
 }
 
 func (p *plugin) Run() (*feeds.Feed, error) {
-	const docsUrl = "https://kometakolomna.ru/docs/31/"
+	var urls = []string{
+		"https://kometakolomna.ru/docs/31/",
+		"https://kometakolomna.ru/docs/34/",
+	}
 
-	result, err := scrape.URLToDocument(p.c, scrape.URLtoTask([]string{docsUrl}))
+	result, err := scrape.URLToDocument(p.c, scrape.URLtoTask(urls))
 	if err != nil {
 		return nil, err
 	}
@@ -102,8 +105,8 @@ func (p *plugin) listHandler(doc *goquery.Document, contentType string) ([]*feed
 			return
 		}
 
-		item.Description = fmt.Sprintf(`<a href="%s">Скачать протоколы</a>`, docUrl)
-		item.Link = &feeds.Link{Href: "https://kometakolomna.ru/docs/31/"}
+		item.Description = fmt.Sprintf(`<a href="%s">Скачать</a>`, docUrl)
+		item.Link = &feeds.Link{Href: "https://kometakolomna.ru/docs/"}
 		item.Id = path
 
 		feedItems = append(feedItems, item)
