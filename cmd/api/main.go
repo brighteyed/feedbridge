@@ -1,8 +1,6 @@
 package main
 
 import (
-	"crypto/tls"
-	"crypto/x509"
 	"errors"
 	"fmt"
 	"net"
@@ -49,23 +47,6 @@ func main() {
 			Timeout: 10 * time.Second,
 		}).Dial,
 		TLSHandshakeTimeout: 10 * time.Second,
-		TLSClientConfig: &tls.Config{
-			InsecureSkipVerify: true,
-			VerifyConnection: func(cs tls.ConnectionState) error {
-				opts := x509.VerifyOptions{
-					DNSName:       cs.ServerName,
-					Intermediates: x509.NewCertPool(),
-				}
-				for _, cert := range cs.PeerCertificates[1:] {
-					opts.Intermediates.AddCert(cert)
-				}
-				_, err := cs.PeerCertificates[0].Verify(opts)
-				if err, ok := err.(x509.CertificateInvalidError); ok && err.Reason == x509.Expired {
-					return nil
-				}
-				return err
-			},
-		},
 	}
 	c := &http.Client{
 		Timeout:   time.Second * 15,
