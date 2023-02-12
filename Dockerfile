@@ -1,4 +1,4 @@
-FROM golang:1.19-alpine as builder
+FROM golang:1.20-alpine3.16 as builder
 
 ENV GO111MODULE=on
 
@@ -9,7 +9,7 @@ ADD ./ /app
 WORKDIR /app
 RUN go build -v -o /feedbridge ./cmd/api/
 
-FROM alpine:latest
+FROM alpine:3.16
 
 RUN apk update && \
     apk add curl ca-certificates && \
