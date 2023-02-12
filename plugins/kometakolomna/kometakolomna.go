@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"strings"
 
 	pm "github.com/dewey/feedbridge/plugin"
 	"github.com/dewey/feedbridge/scrape"
@@ -92,24 +93,36 @@ func (p *plugin) listHandler(doc *goquery.Document, contentType string) ([]*feed
 		}
 		item.Title = header
 
-		// Document
-		t := s.NextFiltered(".docs-table")
-		href := t.Find(".files .tool a")
-		path, exists := href.Attr("download")
-		if !exists {
-			return
+		// Documents
+		var itemId string
+		var docs []string
+
+		for {
+			current := s.NextFiltered(".docs-table")
+
+			href := current.Find(".files .tool a")
+			path, exists := href.Attr("download")
+			if !exists {
+				break
+			}
+
+			docUrl, err := url.JoinPath("https://kometakolomna.ru", path)
+			if err != nil {
+				return
+			}
+
+			docs = append(docs, fmt.Sprintf(`<a href="%s">Скачать</a>`, docUrl))
+			itemId = path
+			s = current
 		}
 
-		docUrl, err := url.JoinPath("https://kometakolomna.ru", path)
-		if err != nil {
-			return
+		if len(docs) > 0 {
+			item.Link = &feeds.Link{Href: "https://kometakolomna.ru/docs/"}
+			item.Description = strings.Join(docs, "<br/>")
+			item.Id = itemId
+
+			feedItems = append(feedItems, item)
 		}
-
-		item.Description = fmt.Sprintf(`<a href="%s">Скачать</a>`, docUrl)
-		item.Link = &feeds.Link{Href: "https://kometakolomna.ru/docs/"}
-		item.Id = path
-
-		feedItems = append(feedItems, item)
 	})
 	return feedItems, nil
 }
