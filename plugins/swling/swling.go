@@ -35,7 +35,7 @@ func (p *plugin) Info() pm.PluginMetadata {
 	return pm.PluginMetadata{
 		TechnicalName: "swling",
 		Name:          p.f.Title,
-		Description:   "Подкаст о радиоприёме и аппаратуре, электронике и многом другом",
+		Description:   "Радиопанорама. Журнал о событиях в мире радио и других средств связи",
 		Author:        "brighteyed",
 		AuthorURL:     "https://github.com/brighteyed",
 		SourceURL:     "https://swling.ru",
